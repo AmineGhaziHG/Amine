@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Liberté Individuelle - Projet Lycée Ultra Stylé</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;700&display=swap');
+
+  /* Reset */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  body, html {
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+    background: #01030a;
+    color: #e3eaff;
+  }
+
+  /* Fond animé cosmo + nuages */
+  #backgroundCanvas {
+    position: fixed; top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: -3;
+    background: linear-gradient(135deg, #04061b 0%, #090f2f 70%, #01030a 100%);
+    overflow: hidden;
+  }
+
+  /* Nuages animés */
+  #clouds {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(70,90,140,0.35) 0%, transparent 60%),
+      radial-gradient(circle at 70% 70%, rgba(90,120,180,0.25) 0%, transparent 50%);
+    animation: cloudsMove 50s linear infinite;
+    z-index: -2;
+    pointer-events: none;
+  }
+  @keyframes cloudsMove {
+    0% {background-position: 0% 0%, 0% 0%;}
+    100% {background-position: 120% 0%, -120% 0%;}
+  }
+
+  /* En-tête */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 90px;
+    background: rgba(0, 20, 50, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 3rem;
+    color: #48e1ff;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    border-bottom: 2px solid #48e1ff;
+    box-shadow: 0 0 28px #48e1ffcc;
+    backdrop-filter: blur(10px);
+    z-index: 20;
+    user-select: none;
+    text-shadow: 0 0 14px #48e1ffbb;
+  }
+
+  /* Navigation */
+  nav {
+    position: fixed;
+    top: 90px; left: 0; right: 0;
+    height: 70px;
+    background: rgba(0, 15, 40, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5rem;
+    border-bottom: 1px solid #48e1ff44;
+    backdrop-filter: blur(9px);
+    z-index: 20;
+  }
+  nav a {
+    color: #90dfffcc;
+    font-weight: 700;
+    font-size: 1.4rem;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 14px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+  }
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -8px; left: 50%;
+    width: 0; height: 3.5px;
+    background: #48e1ff;
+    border-radius: 4px;
+    transition: width 0.38s ease;
+    transform: translateX(-50%);
+  }
+  nav a:hover,
+  nav a.active {
+    color: #48e1ff;
+    background: rgba(72, 225, 255, 0.18);
+    box-shadow: 0 0 14px #48e1ff66;
+  }
+  nav a.active::after {
+    width: 55%;
+  }
+
+  /* Container principal */
+  main {
+    margin-top: 170px;
+    max-width: 1100px;
+    padding: 40px 60px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Section */
+  section {
+    background: rgba(8, 18, 45, 0.88);
+    border-radius: 22px;
+    padding: 50px 60px;
+    box-shadow: 0 0 50px #1ed0ffbb;
+    margin-bottom: 80px;
+    opacity: 0;
+    transform: translateY(70px);
+    transition: all 1s cubic-bezier(0.15,0.85,0.25,1);
+    display: none;
+    user-select: text;
+  }
+  section.active {
+    opacity: 1;
+    transform: translateY(0);
+    display: block;
+  }
+
+  h1 {
+    color: #48e1ff;
+    font-weight: 900;
+    margin-bottom: 30px;
+    font-size: 3.6rem;
+    text-shadow: 0 0 16px #38d6ffcc;
+    letter-spacing: 0.06em;
+  }
+
+  p {
+    font-weight: 400;
+    font-size: 1.45rem;
+    line-height: 1.75;
+    margin-bottom: 28px;
+    color: #c7eaffdd;
+    text-shadow: 0 0 8px #000000bb;
+  }
+
+  ul {
+    margin-left: 32px;
+    margin-bottom: 30px;
+  }
+  ul li {
+    margin-bottom: 16px;
+    font-weight: 600;
+    font-size: 1.3rem;
+  }
+
+  blockquote {
+    border-left: 6px solid #48e1ff;
+    padding-left: 20px;
+    font-style: italic;
+    color: #9be9ffcc;
+    font-size: 1.7rem;
+    margin: 36px 0;
+    text-shadow: 0 0 9px #000000cc;
+  }
+
+  /* Zone image stylisée */
+  #imageZone {
+    margin-top: 40px;
+    background: linear-gradient(145deg, #09254a, #0f406a);
+    border-radius: 28px;
+    box-shadow: 0 0 80px #48e1ffbb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 30px;
+    user-select: none;
+  }
+
+  /* SVG image dimension */
+  #svgLiberty {
+    width: 360px;
+    height: 380px;
+    filter: drop-shadow(0 0 10px #48e1ffaa);
+    animation: pulseGlow 3.5s ease-in-out infinite;
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { filter: drop-shadow(0 0 10px #48e1ffaa); transform: scale(1); }
+    50% { filter: drop-shadow(0 0 22px #48e1ffdd); transform: scale(1.03); }
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    font-size: 1rem;
+    padding: 24px 0;
+    color: #7fcfffdd;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-top: 1px solid #48e1ff44;
+    user-select: none;
+  }
+
+  /* Responsive */
+  @media (max-width: 850px) {
+    main {
+      padding: 30px 25px;
+      margin-top: 160px;
+    }
+    nav {
+      gap: 2.5rem;
+      height: 60px;
+    }
+    nav a {
+      font-size: 1.15rem;
+      padding: 8px 14px;
+    }
+    h1 {
+      font-size: 2.6rem;
+    }
+    #svgLiberty {
+      width: 280px;
+      height: 300px;
+    }
+  }
+  @media (max-width: 480px) {
+    main {
+      padding: 20px 15px;
+      margin-top: 150px;
+    }
+    nav {
+      gap: 1.7rem;
+      height: 55px;
+    }
+    nav a {
+      font-size: 1rem;
+      padding: 6px 10px;
+    }
+    h1 {
+      font-size: 2rem;
+    }
+    #svgLiberty {
+      width: 230px;
+      height: 250px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>Liberté Individuelle</header>
+<nav>
+  <a href="#" data-target="accueil" class="active">Accueil</a>
+  <a href="#" data-target="concept">Concept</a>
+  <a href="#" data-target="citations">Citations</a>
+  <a href="#" data-target="imageZone">Illustration</a>
+  <a href="#" data-target="auteurs">Auteurs</a>
+</nav>
+
+<main>
+  <section id="accueil" class="active">
+    <h1>Bienvenue</h1>
+    <p>La liberté individuelle est la capacité de chaque personne à faire ses propres choix, vivre selon ses convictions, et s’exprimer sans contrainte injustifiée. Elle est un pilier fondamental des sociétés démocratiques modernes.</p>
+    <p>Ce projet est conçu pour vous plonger dans cet univers fascinant, vous faire réfléchir et vous inspirer sur la valeur inestimable de cette liberté.</p>
+    <blockquote>« La liberté consiste à pouvoir faire tout ce qui ne nuit pas à autrui. »<br>— Déclaration des Droits de l’Homme et du Citoyen, 1789</blockquote>
+  </section>
+
+  <section id="concept">
+    <h1>Le Concept</h1>
+    <p>La liberté individuelle, c’est avant tout le droit d’être soi-même. Cela signifie :</p>
+    <ul>
+      <li>Choisir sa voie professionnelle sans pression.</li>
+      <li>Exprimer ses idées même quand elles dérangent.</li>
+      <li>Vivre selon ses valeurs sans peur.</li>
+      <li>Protéger sa vie privée face aux intrusions.</li>
+      <li>Développer son potentiel unique dans une société inclusive.</li>
+    </ul>
+    <p>La liberté n’est pas un privilège, mais un droit universel qui demande vigilance et respect pour s’épanouir.</p>
+  </section>
+
+  <section id="citations">
+    <h1>Citations Inspirantes</h1>
+    <p>Quelques réflexions marquantes sur la liberté individuelle :</p>
+    <blockquote>« Être libre, ce n’est pas seulement se débarrasser de ses chaînes, c’est vivre d’une façon qui respecte et renforce la liberté des autres. »<br>— Nelson Mandela</blockquote>
+    <blockquote>« La liberté est la possibilité de choisir ses contraintes. »<br>— Jean-Paul Sartre</blockquote>
+    <blockquote>« La liberté ne consiste pas à faire ce que l’on veut, mais à vouloir ce que l’on fait. »<br>— Jean-Jacques Rousseau</blockquote>
+  </section>
+
+ 
+  
+  <!-- Halo lumineux flottant -->
+  <div style="position: absolute; top: -30%; left: 50%; width: 800px; height: 800px; background: radial-gradient(circle, #48e1ff33 0%, transparent 70%); transform: translateX(-50%); z-index: 0; pointer-events: none;"></div>
+
+  <h1 style="text-align: center; margin-bottom: 2.5rem; font-weight: 700; text-shadow: 0 0 12px #48e1ffcc; font-size: 3.2rem;">Illustration : Liberté Individuelle</h1>
+  
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; align-items: center; position: relative; z-index: 1;">
+    
+    <!-- Bloc SVG -->
+    <div style="display: flex; justify-content: center;">
+      <svg id="svgLiberty" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Silhouette stylisée de liberté" style="max-width: 100%; height: auto; filter: drop-shadow(0 0 16px #48e1ffaa); animation: pulseGlow 4s ease-in-out infinite;">
+        <defs>
+          <radialGradient id="glow" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="#48e1ff" stop-opacity="0.8" />
+            <stop offset="100%" stop-color="#0a2f66" stop-opacity="0" />
+          </radialGradient>
+          <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#48e1ff" flood-opacity="0.7"/>
+          </filter>
+        </defs>
+        <circle cx="100" cy="110" r="90" fill="url(#glow)" />
+        <path filter="url(#shadow)" fill="#48e1ff" stroke="#0a2f66" stroke-width="2"
+          d="M100 40 Q110 90 140 110 Q120 130 130 180 Q100 160 70 180 Q80 130 60 110 Q90 90 100 40 Z" />
+        <path fill="#1faaff" stroke="#0a2f66" stroke-width="1"
+          d="M40 100 Q20 90 40 80 L50 70 Q55 65 60 75 L80 100 Q65 115 40 100 Z" />
+        <path fill="#1faaff" stroke="#0a2f66" stroke-width="1"
+          d="M160 100 Q180 90 160 80 L150 70 Q145 65 140 75 L120 100 Q135 115 160 100 Z" />
+        <line x1="100" y1="10" x2="100" y2="40" stroke="#48e1ff" stroke-width="3" stroke-linecap="round" />
+        <line x1="85" y1="20" x2="70" y2="40" stroke="#48e1ff" stroke-width="2" stroke-linecap="round" />
+        <line x1="115" y1="20" x2="130" y2="40" stroke="#48e1ff" stroke-width="2" stroke-linecap="round" />
+      </svg>
+    </div>
+
+    <!-- Bloc image + texte -->
+    <div style="text-align: center; display: flex; flex-direction: column; gap: 1.2rem;">
+      <img src="IMAGE.png" alt="Personne debout au sommet d'une montagne, bras écartés face au soleil levant" style="max-width: 100%; border-radius: 14px; box-shadow: 0 0 18px #48e1ff55;">
+      <p style="font-size: 1.2rem; line-height: 1.7; color: #c7eaff; background: rgba(0, 0, 0, 0.45); padding: 1.5rem; border-radius: 10px; box-shadow: 0 0 12px #48e1ff55;">
+        Cette image illustre une personne debout au sommet d’une montagne, les bras grands ouverts face au soleil levant. Elle incarne l’élévation, la liberté individuelle et la quête d’accomplissement personnel dans un monde vaste et sans limites.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+  <section id="auteurs">
+    <h1>Les Auteurs</h1>
+    <p>Ce site a été conçu avec passion par :</p>
+    <ul>
+      <li><strong>Amine Ghazi</strong></li>
+    </ul>
+    <p>Nous espérons que ce projet vous fera réfléchir à la force et à la beauté de la liberté individuelle.</p>
+  </section>
+</main>
+
+<footer>
+  Projet Lycée &mdash; Liberté Individuelle &copy; 2025
+</footer>
+
+<script>
+  // Gestion de la navigation entre sections
+  const links = document.querySelectorAll('nav a');
+  const sections = document.querySelectorAll('main section');
+
+  function setActiveSection(id) {
+    sections.forEach(section => {
+      if(section.id === id) {
+        section.classList.add('active');
+      } else {
+        section.classList.remove('active');
+      }
+    });
+    links.forEach(link => {
+      link.classList.toggle('active', link.dataset.target === id);
+    });
+    // Scroll top pour section visible
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  links.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      setActiveSection(link.dataset.target);
+    });
+  });
+
+  // Canvas particules cosmiques en fond
+  const canvas = document.createElement('canvas');
+  canvas.id = 'backgroundCanvas';
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  let W, H;
+
+  function resizeCanvas() {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.radius = Math.random() * 1.3 + 0.6;
+      this.vx = (Math.random() - 0.5) * 0.35;
+      this.vy = (Math.random() - 0.5) * 0.35;
+      this.alpha = Math.random() * 0.4 + 0.25;
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      if(this.x < 0) this.x = W;
+      if(this.x > W) this.x = 0;
+      if(this.y < 0) this.y = H;
+      if(this.y > H) this.y = 0;
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(72, 225, 255, ${this.alpha})`;
+      ctx.shadowColor = `rgba(72, 225, 255, ${this.alpha})`;
+      ctx.shadowBlur = 7;
+      ctx.fill();
+    }
+  }
+
+  let particles = [];
+  const NUM_PARTICLES = 120;
+
+  for(let i=0; i < NUM_PARTICLES; i++) {
+    particles.push(new Particle());
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Dessiner les particules
+    particles.forEach(p => {
+      p.update();
+      p.draw();
+    });
+
+    // Connecter les particules proches
+    for(let i=0; i < NUM_PARTICLES; i++) {
+      for(let j=i+1; j < NUM_PARTICLES; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if(dist < 140) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(72, 225, 255, ${0.12 - dist/900})`;
+          ctx.lineWidth = 1;
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
+
+<div id="clouds"></div>
+
+</body>
+</html>
